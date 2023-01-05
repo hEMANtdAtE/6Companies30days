@@ -1,0 +1,39 @@
+class Solution {
+public:
+    string getHint(string secret, string guess) {
+        int b=0,c=0;
+        // int t=secret.size
+        for(int i=0;i<secret.size();i++){
+            if(secret[i]==guess[i]){
+                 b++; 
+                 secret.erase(i,1);
+                 guess.erase(i,1);
+                 i--;
+                //  cout<<" "<<secret<<" "<<guess<<" "<<b<<endl;
+            }
+        }
+        sort(secret.begin(), secret.end());
+        sort(guess.begin(), guess.end());
+        int i=secret.size();
+        int r=0,s=0;
+        // cout<<i<<" "<<c<<" "<<r<<" "<<s<<endl;
+        while(r<i && s<i){
+            if(secret[r]==guess[s]){
+                c++;
+                r++;
+                s++;
+                // cout<<i<<" "<<c<<" "<<r<<" "<<s<<endl;
+            }
+            else if(secret[r]<guess[s]){
+                r++;
+                // i--;
+            }
+            else if(secret[r]>guess[s]){
+                s++;
+            }
+        }
+        string st= to_string(b) + "A" + to_string(c) + "B" ;
+        return st;
+
+    }
+};
