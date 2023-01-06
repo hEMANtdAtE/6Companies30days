@@ -1,0 +1,140 @@
+class Solution {
+    
+    static bool sortcol(const vector<int>& v1, const vector<int>& v2)
+    {
+        if(v2[0]==v1[0]){
+            return v1[1] < v2[1];
+        }
+        return v1[0] < v2[0];
+    }
+public:
+    const unsigned int M = 1000000007;
+
+    bool isRectangleCover(vector<vector<int>>& re) {
+        if(re.size()==1) return true;
+        vector <pair<int, int>> c;
+        int p,q,r,s;
+        int mi=999999,mn=999999;
+        int ma=0,mx=0;
+        unsigned long long aa;
+        vector <pair<int, int>> ll;
+        vector <pair<int, int>> lu;
+        vector <pair<int, int>> ru;
+        vector <pair<int, int>> rl;
+        for(int i=0;i<re.size();i++){
+            ll.emplace_back(re[i][0] , re[i][1]);
+            lu.emplace_back(re[i][0] , re[i][3]);
+            ru.emplace_back(re[i][2] , re[i][3]);
+            rl.emplace_back(re[i][2] , re[i][1]);
+        }
+
+        for(int i=0;i<re.size();i++){
+            mn= ( pow(re[i][0],1) + pow(re[i][1],1) );
+            if(mi>mn){
+                mi=mn;
+                if(c.size()==0){
+                    p=re[i][0];
+                    q=re[i][1];
+                    c.emplace_back(re[i][0], re[i][1]);
+                }
+                else{
+                    p=re[i][0];
+                    q=re[i][1];
+                    c.pop_back();
+                    c.emplace_back(re[i][0], re[i][1]);
+                }
+            }
+        }
+
+
+        for(int i=0;i<re.size();i++){
+            mx= ( pow(re[i][2],1) + pow(re[i][3],1) );
+            if(ma<mx){
+                ma=mx;
+                if(c.size()==1){
+                    r=re[i][2];
+                    s=re[i][3];
+                    c.emplace_back(re[i][2], re[i][3]);
+                }
+                else{
+                    r=re[i][2];
+                    s=re[i][3];
+                    c.pop_back();
+                    c.emplace_back(re[i][2], re[i][3]);
+                }
+            }
+            
+        }
+        pair<int,int> mylu{p,s};
+        pair<int,int> myrl{r,q};
+        c.emplace_back(p,s);
+        c.emplace_back(r,q);
+        int A=abs(p-r)%M;
+        int B=abs(q-s)%M;
+        aa=(A*B)%M;
+        long long a=0;
+        for(int i=0;i<re.size();i++){
+            a+=(abs(re[i][0] - re[i][2]) * abs(re[i][1] - re[i][3]));
+            cout<<a<<" ";
+        }
+        a=a%M;
+        sort(lu.begin(),lu.end());
+        sort(rl.begin(),rl.end());
+
+        // for(int i=0;i<re.size();i++){
+        //     binary_search(lu.begin(),lu.end(),mylu);
+        // }
+        sort(re.begin(), re.end(), sortcol);
+        for(int i=0;i<re.size();i++){
+            // cout<<re[i][0]<<" "<<re[i][1]<<endl;
+        }
+
+
+        for(int i=1;i<re.size();i++){
+            if(re[i][1]== re[i-1][3] ){
+                cout<<i<<endl;
+                continue;
+
+            }
+            if(re[i][0] < re[i-1][2] ){
+                if(re[i][1] < re[i-1][3] ){
+                    if(re[i][2] > re[i-1][2]  && re[i][3] > re[i-1][3] ){
+                        return false;
+                    }
+                    if(re[i][3] > re[i-1][1])
+                    {
+                        return false;
+                    }
+                }
+            }
+        }for(int i=2;i<re.size();i++){
+            if(re[i][1]== re[i-2][3] ){
+                continue;
+            }
+            if(re[i][0] < re[i-2][2] ){
+                if(re[i][1] < re[i-2][3] ){
+                    if(re[i][2] > re[i-2][2]  && re[i][3] > re[i-2][3] ){
+                        return false;
+                    }
+                    if(re[i][3] > re[i-2][1])
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+
+         if(a==aa){
+             if( binary_search(lu.begin(),lu.end(),mylu) )
+             {
+                 if( binary_search(rl.begin(),rl.end(),myrl) )
+                 {
+                    return true;
+                 }
+             }
+         }   
+
+        return false;
+    }
+};
