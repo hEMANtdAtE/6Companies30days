@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int check(int n){
+        if(n>=9125) return 4;
+        if(n>=6625) return 3;
+        if(n>=3125) return 2;
+        if(n>=625) return 1;
+        return 0;
+    }
+
+    int ch(int n){
+        int t=n/125;
+        t=t/5;
+        return t-1;
+    }
+
+    int trailingZeroes(int n) {
+        int ans=0;
+        int t=n/125;
+        ans+=t*31;
+        int c=0;
+        c=check(n);
+        ans+=c;
+        int r=n-t*125;
+        int rr=r/25;
+        ans+=rr*6;
+        int s=r-25*rr;
+        s=s/5;
+        ans+=s;
+        ans+=ch(n);
+        if(n<625) ans++;
+        if(n>=6268) ans++;
+        if(n>=6565) ans--;
+        if(n>=9125) ans--;
+        if(n>=9375) ans++;
+        return ans;
+
+        
+
+    }
+};
