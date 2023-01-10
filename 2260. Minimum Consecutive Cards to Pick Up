@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int minimumCardPickup(vector<int>& arr) {
+        vector<pair<int, int> > vp;
+        int n=arr.size();
+    
+        for (int i = 0; i < n; ++i) {
+            vp.push_back(make_pair(arr[i], i));
+        }
+        sort(vp.begin(), vp.end());
+        int m=999999;
+        for (int i = 1; i < vp.size(); i++) {
+            if(vp[i].first == vp[i-1].first){
+                m=min(m, (vp[i].second - vp[i-1].second));
+            }
+        }
+        if(m==999999) return -1;
+    return m+1;        
+    }
+};
