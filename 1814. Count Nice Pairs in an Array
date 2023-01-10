@@ -1,0 +1,27 @@
+class Solution {
+public:
+
+    int r(int num)
+    {
+        string str = to_string(num);
+        reverse(str.begin(), str.end());
+        num = stoll(str);
+        return num;
+    }
+
+    int countNicePairs(vector<int>& n) {
+        vector<int> v(n.size());
+        map <int,int> mp;
+        int m=1e9 +7;
+        int c=n.size();
+        long long ans=0;
+        for( int i =0;i<c;i++){
+            v[i]=(n[i] - r(n[i]));
+            if(mp.count(v[i])==true){
+                ans=(ans+mp[v[i]])%m;
+            }
+            mp[v[i]]++;
+        }
+        return ans;
+    }
+};
