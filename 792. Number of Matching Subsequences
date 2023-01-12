@@ -1,0 +1,73 @@
+**************************************************************my soln********************************************
+class Solution {
+public:
+    int checkforSubsequence(string S,string target){
+        stack<char> s;
+        for (int i = 0; i < target.size(); i++) {
+            s.push(target[i]);
+        }
+    
+        for (int i = (int)S.size() - 1; i >= 0; i--) {
+            if (s.empty()) {
+                return 1;
+            }
+            if (S[i] == s.top()) {
+                s.pop();
+            }
+        }
+        if (s.empty())
+            return 1;
+        else
+            // cout << "No" << endl;
+            return 0;
+    }
+
+    int numMatchingSubseq(string s, vector<string>& w) {
+        int ans=0;
+        sort(w.begin(),w.end());
+
+        for(int i=0;i<w.size();i++){
+            int freq = std::count(w.begin(), w.end(), w[i]);
+            if(freq>40){
+                cout<<i<<" "<<w[i]<<endl;
+                ans+= (checkforSubsequence(s,w[i])*freq);
+                i=i+freq;
+                continue;
+            }
+            
+            ans+=checkforSubsequence(s,w[i]);
+        }
+
+        return ans;
+    }
+};
+
+
+
+*************************************optimal soln*******************************************************************************
+class Solution { // binary serach
+public:
+	int numMatchingSubseq(string s, vector<string>& A) {
+		int n = A.size(), res = n;
+		vector<vector<int>> w(26);
+		vector<int> p(n);
+		for (int i = 0; i < s.size(); ++i)   // compare:
+			w[s[i] - 'a'].push_back(i);
+		for (int i = 0; i < n; ++i)
+		{
+			int k = -1;
+			while (p[i] != A[i].size())
+			{
+				auto &v = w[A[i][p[i]++] - 'a'];
+				auto it = upper_bound(v.begin(), v.end(), k);
+				if (it == v.end())
+				{
+					--res;  // trick
+					break;
+				}
+				k = *it;
+			}
+		}
+		return res;
+	}
+};
