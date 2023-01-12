@@ -1,0 +1,48 @@
+*********************************************my soln************************************
+class Solution {
+public:
+    int l(vector<int>& arr)
+    {
+        vector<int> ans;
+        int n = arr.size();
+        for (int i = 0; i < n; i++) {
+            auto it
+                = lower_bound(ans.begin(), ans.end(), arr[i]);
+            if (it == ans.end()) {
+                ans.push_back(arr[i]);
+            }
+            else {
+                *it = arr[i];
+            }
+        }
+        return ans.size();
+    }
+    bool increasingTriplet(vector<int>& nums) {
+        int ans=l(nums);
+        if(ans>=3) return true;
+        return false;
+        
+    }
+};
+
+
+*********************************************optimal soln**********************************************************
+static const int _ = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    return 0;
+}();
+
+class Solution {
+public:
+    bool increasingTriplet(vector<int>& nums) {
+        int lo=INT_MAX;
+        int mid=INT_MAX;
+        for(auto x:nums){
+            if(x<=lo){ lo=x;}
+            else if(x<=mid){ mid=x;}
+            else{ return true;}
+        }
+        return false;
+    }
+};
