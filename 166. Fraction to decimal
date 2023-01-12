@@ -1,0 +1,36 @@
+***************************my soln / optimal soln*********************************
+class Solution {
+public:
+    string fractionToDecimal(int nn, int dd) {
+        if(dd==1) return to_string(nn);
+        
+        string ans="";
+        long long n=nn;
+        long long d=dd;
+        if(n<0 && d>0) {ans+="-"; n=n * -1;}
+        if(n>0 && d<0) {ans+="-"; d*=-1;}
+        long long q=n/d;
+        long long r=n%d;
+        if(r==0) return to_string(q);
+        ans+=to_string(q);
+        ans+=".";
+        // ans+=to_string(r);
+        unordered_map <int,int> mp;
+        while(r!=0){
+            if(mp.count(r)){
+                int l=mp[r];
+                ans.insert(l, "(");
+                ans+=")";
+                break;
+            }
+            else{
+                mp[r]=ans.size();
+                r*=10;
+                q=r/d;
+                r%=d;
+                ans+=to_string(q);
+            }
+        }
+        return ans;
+    }
+};
