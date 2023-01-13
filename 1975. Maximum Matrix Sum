@@ -1,0 +1,40 @@
+*************************************************************my soln**************************************************
+class Solution {
+public:
+    long long maxMatrixSum(vector<vector<int>>& m) {
+        int c=0;
+        long long ans=0;
+        int n=m.size();
+        vector <int> v;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(m[i][j] < 0) c++;
+                v.push_back(abs(m[i][j]));
+                ans+=abs(m[i][j]);
+            }
+        }
+        sort(v.begin(),v.end());
+        if( v[0]>0 && (c%2)==1 ){
+            return ans-2*v[0];
+        }
+        return ans;
+    }
+};
+
+*******************************************************optimal soln********************************************************
+class Solution {
+public:
+    long long maxMatrixSum(vector<vector<int>>& matrix) {
+        long long sum = 0, minVal = 1e9;
+        bool hasZero = false, negCount = false;
+        for (auto &row: matrix) {
+            for (int col: row) {
+                sum += abs(col);
+                minVal = min(minVal, (long long)abs(col));
+                if (col == 0) hasZero = true;
+                if (col < 0) negCount = !negCount;
+            }
+        }
+        return (!hasZero && negCount)? sum - 2 * minVal: sum;
+    }
+};
