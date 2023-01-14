@@ -1,0 +1,61 @@
+******************************************************my soln**********************************************************
+class Solution {
+    public int magicalString(int n) {
+        vector <int> v={1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,1,2,2};
+        vector <int> c={1,2,2,1,1,2,1,2,2,1,2,2,1,1,2,1,1,2,2};
+        int in=1;
+        int p=12;
+        if(n<20) return count(v.begin(), v.begin()+n, 1);
+        int i=20;
+        while(i<n){
+            v.insert(v.end(),c[p],in);
+            c.insert(c.end(),c[p],in);
+            i+=c[p];
+            p++;
+            if(in==2) in=1;
+            else if(in==1) in =2;
+        }
+        return count(v.begin(), v.begin()+n, 1);
+    }
+}
+
+
+******************************************************optimal soln*****************************************************
+class Solution {
+public:
+    int magicalString(int n) {
+        string s1="1",s2="11",s3="2",s4="22",s="122";
+        int x=2,flag=0;
+
+        while(s.length()<n){
+            if(flag==0){
+                if(s[x]=='2'){
+                    s+=s2;
+                }
+                else{
+                    s+=s1;
+                }
+                flag=1;
+            }
+            else{
+                if(s[x]=='2'){
+                    s+=s4;
+                }
+                else{
+                    s+=s3;
+                }
+                flag=0;
+            }
+
+            x++;
+        }
+
+        int o=0;
+        for(int i=0;i<n;i++){
+            if(s[i]=='1'){
+                o++;
+            }
+        }
+        return o;
+    }
+};
