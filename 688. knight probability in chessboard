@@ -1,0 +1,153 @@
+*******************************correct c++ soln++++++++++++++++++++++++++++++++++++++++++++++++++++
+class Solution {
+public:
+    double knightProbability(int N, int K, int r, int c) {
+        return helper(N, K, r, c);
+    }
+    
+    double helper(int N, int K, int row, int col){
+        
+        if(row < 0 || col < 0 || row >= N || col >= N) return 0.0;
+        
+        if(K == 0) return 1.0;
+        
+        double ans = helper(N, K-1, row+2, col+1) + helper(N, K-1, row+1, col+2) + 
+                    helper(N, K-1, row-1, col+2) + helper(N, K-1, row-2, col+1) + 
+                    helper(N, K-1, row-2, col-1) + helper(N, K-1, row-1, col-2) +
+                  helper(N, K-1, row+1, col-2) + helper(N, K-1, row+2, col-1);
+        
+        double result  = ans / 8.0;
+        return result;
+    }
+};
+
+
+
+*******************************correct java soln++++++++++++++++++++++++++++++++++++++++++++++++++++
+class Solution {
+    public static boolean isv(int ni,int nj,int n){
+        if(ni>=0 && nj>=0 && ni<n && nj<n){
+            return true;
+        }
+        return false;
+    }
+
+
+    public double knightProbability(int n, int k, int r, int c) {
+        double[][] curr=new double[n][n];
+        double[][] next=new double[n][n];
+        curr[r][c]=1;
+        for(int m=0;m<k;m++){
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(curr[i][j]!=0){
+                        int ni=0;int nj=0;
+
+                        ni=i-2;
+                        nj=j+1;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i-2;
+                        nj=j-1;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i-1;
+                        nj=j-2;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i-1;
+                        nj=j+2;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i+2;
+                        nj=j+1;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i+2;
+                        nj=j-1;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i+1;
+                        nj=j+2;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                        ni=i+1;
+                        nj=j-2;
+                        if(isv(ni,nj,n)){
+                            next[ni][nj]+=curr[i][j]/8.0;
+                        }
+                    }
+                }
+            }
+            curr=next;
+            next=new double[n][n];
+        }
+
+        double sum=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                sum+=curr[i][j];
+            }
+        }
+
+        return sum;
+        
+    }
+}
+
+
+
+
+**************************************my attempted c++ soln++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Solution {
+public:
+    bool check(int ni,int nj,int n){
+        if(ni>=0 && ni<n && nj>=0 && nj<n){
+            return true;
+        }
+        return false;
+    }
+
+    double knightProbability(int n, int k, int r, int c) {
+        vector <vector<double>> curr(n, vector <double>(8,0));
+        vector <vector<double>> next(n, vector <double>(8,0));
+        vector <vector<double>> temp(n, vector <double>(8,0));
+        vector <int> x{-2,-1,1,2,2,1,-1,-2};
+        vector <int> y{1,2,2,1,-1,-2,-2,-1};
+
+        curr[r][c]=1;
+        for(int m=0;m<k;m++){
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(curr[i][j]!=0){
+                        for(int move=0;move<8;move++){
+                            if(check(i+x[move],j+y[move],n)){
+                                next[i+x[move]][j+y[move]]=next[i+x[move]][j+y[move]]+(curr[i][j]/8);
+                            }
+                        }
+                    }
+                }
+            }
+            curr=next;
+            next=temp;
+        }
+        double d=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                d+=curr[i][j];
+                // cout<<curr[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+        return d;
+        
+    }
+};
