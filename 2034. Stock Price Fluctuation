@@ -1,0 +1,91 @@
+*********************************************my soln***************************************
+class StockPrice {
+public:
+// vector <int> v/;
+    map<int,int> mp,freq;
+    int c=0;
+    StockPrice() {
+        
+    }
+    
+    void update(int t, int p) {
+        if(mp.find(t)!=mp.end()){
+            int prev=mp[t];
+            freq[prev]--;
+            if(freq[prev]==0) freq.erase(prev);
+        }
+        freq[p]++;
+        mp[t]=p;
+        mp[t]=p;
+        c=max(c,t);
+    }
+    
+    int current() {
+        return mp[c];
+    }
+    
+    int maximum() {
+        return freq.rbegin()->first;
+        // return mp[pmax];
+    }
+    
+    int minimum() {
+        return freq.begin()->first;
+    }
+};
+
+/**
+ * Your StockPrice object will be instantiated and called as such:
+ * StockPrice* obj = new StockPrice();
+ * obj->update(timestamp,price);
+ * int param_2 = obj->current();
+ * int param_3 = obj->maximum();
+ * int param_4 = obj->minimum();
+ */
+ 
+ 
+ *********************************************optimal soln***************************************
+class StockPrice {
+public:
+    unordered_map <int, int> timeStamp_price_map;
+    pair <int, int> currRecord;
+    multiset <int> stockSet;
+
+    StockPrice() {
+    }
+    
+    void update(int timestamp, int price) {
+        if (timeStamp_price_map.count(timestamp)) {
+            stockSet.erase(stockSet.find(timeStamp_price_map[timestamp]));
+            stockSet.insert(price);
+            timeStamp_price_map[timestamp] = price;
+        } else {
+            timeStamp_price_map[timestamp] = price;
+            stockSet.insert(price);
+        }
+        if (currRecord.first <= timestamp) {
+            currRecord = make_pair(timestamp, price);
+        }
+    }
+    
+    int current() {
+        return currRecord.second;
+    }
+    
+    int maximum() {
+        return *stockSet.rbegin();
+    }
+    
+    int minimum() {
+        return *stockSet.begin();
+    }
+};
+
+/**
+ * Your StockPrice object will be instantiated and called as such:
+ * StockPrice* obj = new StockPrice();
+ * obj->update(timestamp,price);
+ * int param_2 = obj->current();
+ * int param_3 = obj->maximum();
+ * int param_4 = obj->minimum();
+ */
