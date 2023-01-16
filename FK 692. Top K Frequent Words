@@ -1,0 +1,72 @@
+**********************************************************my soln******************************************************
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& w, int k) {
+        map<string,int> mp;
+        vector<string> v;
+        multimap<int,string,greater <int> > mm;
+        for(int i=0;i<w.size();i++){
+            mp[w[i]]++;
+        }
+        for(auto& it : mp){
+            mm.insert({ it.second, it.first });
+        }
+        int z=0;
+        for(auto& it : mm){
+            if(z>=k){
+                break;
+            }
+            v.push_back(it.second);
+            z++;
+        }
+        // for(
+        return v;
+        
+    }
+};
+
+
+
+
+
+********************************************************optimal soln******************************************************
+class Solution {
+public:
+    struct comp{
+        bool operator()(pair<int,string> &x, pair<int,string> &y)
+        {
+            if(x.first==y.first)
+                return x.second<y.second;
+            return x.first>y.first;
+        }
+    };
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        unordered_map<string, int> freq;
+        for(string word : words)
+        {
+            freq[word]++;
+        }
+        priority_queue<pair<int,string>, vector<pair<int,string>>, comp> pq;
+        for(auto it:freq)
+        {
+            if(pq.size()<k)
+                pq.push({it.second, it.first});
+            else
+            {
+                if((pq.top().first<it.second) || (pq.top().first==it.second && pq.top().second>it.first))
+                {
+                    pq.pop();
+                    pq.push({it.second, it.first});
+                }
+            }
+        }
+        vector<string> res;
+        while(!pq.empty())
+        {
+            res.push_back(pq.top().second);
+            pq.pop();
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
