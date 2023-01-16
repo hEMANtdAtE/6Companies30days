@@ -1,0 +1,67 @@
+********************************************my soln*******************************************
+class Solution {
+public:
+    string customSortString(string v, string s) {
+        int nv=v.size();
+        int ns=s.size();
+        vector <char> d(s.begin(),s.end());
+        string ans=s;
+        int q=0;
+        vector <int> c(ns,0);
+        for(int i=0;i<nv;i++){
+            int cn=count(d.begin(),d.end(),v[i]);
+            for(int j=0;j<ns;j++){
+                if(cn==0) break;
+                if(s[j]==v[i]){
+                    ans[q]=v[i];
+                    q++;
+                    c[j]=1;
+                    cn--;
+                } 
+            }
+            cout<<endl;
+        }
+        for(int i=0;i<ns;i++){
+            if(c[i]==0) {cout<<"    "<<i<<" "<<s[i]<<endl; ans[q]=s[i]; q++;}
+        }
+        return ans;
+    }
+};
+
+
+
+********************************************optimal soln*********************************************
+class Solution {
+public:
+    string customSortString(string order, string s) {
+        string str = "";
+        unordered_map<char,int> u;
+
+        for(auto &ch : s)
+        u[ch]++;
+
+        for(auto &ch : order)
+        {
+            if(u.find(ch) != u.end())
+            {
+                auto temp = u.find(ch);
+                // for(int i = 0; i < temp->second; i++)
+                // str.push_back(temp->first);
+
+                string s(temp->second, temp->first);
+                str += s;
+
+                u.erase(ch);
+            }
+        }
+
+        for(auto &ch : u)
+        {
+            string s(ch.second, ch.first);
+            str += s;
+        }    
+
+        return str;
+
+    }
+};
