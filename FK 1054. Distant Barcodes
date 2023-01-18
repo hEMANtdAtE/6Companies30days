@@ -1,0 +1,66 @@
+**********************************************my soln*************************************
+class Solution {
+public:
+    vector<int> rearrangeBarcodes(vector<int>& b) {
+        int n=b.size();
+        map<int,int> mp;
+        for(auto i : b) mp[i]++;
+        multimap <int,int ,greater<int> > m;
+        for(auto& it : mp) m.insert({ it.second, it.first });
+        vector <int> v;
+        for(auto& i: m){
+            for(int j=0;j<i.first;j++){
+                v.push_back(i.second);
+            }
+        }
+        
+        int index=0;
+        for(int i=0;i<n;i++){
+            if(index >= n) index=1;
+            b[index]=v[i];
+            index=index+2;
+        }
+        return b;
+    }
+};
+
+
+******************************************optimal soln*************************************
+
+// sample 62 ms submission
+class Solution
+{
+public:
+    vector<int> rearrangeBarcodes(vector<int> &barcodes)
+    {
+        int n = barcodes.size();
+        vector<int> res(n, 0);
+
+        int bar_freq[10001]; fill_n(bar_freq, 10001, 0);
+        int max = 0;
+
+        for(int x : barcodes)
+        {
+            if(++bar_freq[x] > bar_freq[max])
+            {
+                max = x;
+            }
+        }
+
+        int counter = 0;
+
+        for(int x = max; x < 10001 + max; ++x)
+        {
+            int y = x % 10001;
+
+            for(int i = 0; i < bar_freq[y]; ++i)
+            {
+                res[counter] = y;
+                counter = (counter + 2) % n;
+                counter = counter == 0 ? 1 : counter;
+            }
+        }
+
+        return res;
+    }
+};
