@@ -1,0 +1,101 @@
+******************************************my soln**********************************
+class Solution {
+public:
+   
+    struct node
+    {
+        int data;
+        struct node *next;
+        struct node *prev;
+    };
+    
+    struct node* getNode(){
+        return ((struct node *)malloc(sizeof(struct node)));
+    }
+    
+    int displayList(struct node *temp)
+    {
+        struct node *t = temp;
+        if(temp == NULL)
+            return 0;
+        else
+        {  
+            cout<<"The list is: ";
+            
+            while(temp->next != t)
+            {
+                cout<<temp->data<<" ";
+                temp = temp->next;
+            }
+            
+            cout<<temp->data;
+            
+            return 1;
+        }
+    }
+    
+    void createList(int arr[], int n, struct node **start)
+    {
+        struct node *newNode,*temp;
+        int i;
+        for(i=0;i<n;i++)
+        {
+            newNode = getNode();
+            newNode->data = arr[i];
+            if(i==0)
+            {
+                *start = newNode;
+                newNode->prev = *start;
+                newNode->next = *start;
+            }
+            else
+            {  
+                temp = (*start)->prev;
+                temp->next = newNode;
+                newNode->next = *start;
+                newNode->prev = temp;
+                temp = *start;
+                temp->prev = newNode;
+            }
+        }
+    }
+    
+    int findTheWinner(int n, int k) {
+        int arr[n]; 
+        iota(arr, arr + n, 1); 
+        node* start =NULL;
+        createList(arr, n, &start);
+        for(int i=0;i<n-1;i++){
+            int a=k-1;
+            while(a--){
+                start=start->next;
+            }
+            node* temp =start;
+            temp->prev->next=temp->next;
+            temp->next->prev=temp->prev;
+            start=temp->next;
+        }
+        return start->data;
+    }
+};
+
+
+
+
+******************************************optimal soln**********************************
+class Solution {
+public:
+    int solve(int n, int k){
+      if(n==1){
+         return 0;   // base case 
+      }
+      int x = solve(n-1,k);  // this will return survivor of n-1 
+      int y = (x+k) % n;     // this will give survivor of n
+      return y;
+    }
+
+    int findTheWinner(int n, int k) {
+      int res= solve(n,k)+1;
+      return res;
+    }
+};
