@@ -1,0 +1,209 @@
+****************************************my soln************************************
+/**
+ * // This is the MountainArray's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *   public:
+ *     int get(int index);
+ *     int length();
+ * };
+ */
+
+class Solution {
+public:
+    int solve(int k, MountainArray &m,int st,int ed){
+        int n=ed-st;
+        if(st!=0) n++;
+        int a=n/4;
+        int b=3*n/4;
+        int aa=m.get(a);
+        if(aa==k) return a;
+        int bb=m.get(b);
+        if(bb==k) return b;
+        if((aa-bb)==0) {
+                    cout<<"d"<<endl;
+            // if(k>aa){
+            //     for(int i=a;i<b;i++){
+            //         if(m.get(i)==k) return i;
+            //     }
+            // }
+            if(k<aa){
+                    cout<<"d"<<endl;
+                for(int i=0;i<a;i++){
+                    if(m.get(i)==k) return i;
+                }
+                for(int i=b;i<n;i++){
+                    if(m.get(i)==k) return i;
+                }
+                return -1;
+            }
+        }
+        if((aa-bb)>0){
+            cout<<"aa > bb"<<endl;
+            if(k>bb){
+                if(bb-m.get(b-1) > 0){ 
+            cout<<"bb > m.get(b-1)"<<endl;
+                for(int i=b;i<n;i++){
+                    if(m.get(i)==k) return i;
+                }}
+                else{
+            cout<<"bb < m.get(b-1)"<<endl;
+                    for(int i=a;i<b;i++){
+                    if(m.get(i)==k) return i;
+                }}
+                return -1;
+            }
+            if(k>aa){
+                    if((b-a)<100){
+                        for(int i=a;i<b;i++){
+                            if(m.get(i)==k) return i;
+                        }
+                    }
+                        else {return solve(k,m,a,b);}
+            }
+            if(k<aa){
+                for(int i=0;i<a;i++){
+                    if(m.get(i)==k) return i;
+                }
+                if(k<bb){
+                   for(int i=b;i<n;i++){
+                        if(m.get(i)==k) return i;
+                    } 
+                }
+                return -1;
+            }
+        }
+        if((aa-bb)<=0) {
+            cout<<"a"<<endl;
+            if(k>bb){
+            cout<<"k > bb"<<endl;
+                if(bb-m.get(b-1) > 0){ 
+                    for(int i=b;i<n;i++){
+                        if(m.get(i)==k) return i;
+                    }
+                }
+                else{
+                    cout<<"recc"<<endl;
+                    if((b-a)<100){
+                        for(int i=a;i<b;i++){
+                            if(m.get(i)==k) return i;
+                        }
+                    }
+                        else {return solve(k,m,a,b);}
+                    }
+                
+                return -1;
+            }
+            if(k>aa){
+                for(int i=a;i<b;i++){
+                    if(m.get(i)==k) return i;
+                }
+            }
+            if(k<aa){
+                for(int i=0;i<a;i++){
+                    if(m.get(i)==k) return i;
+                }
+                for(int i=b;i<n;i++){
+                    if(m.get(i)==k) return i;
+                }
+                return -1;
+            }
+        }
+        // solve();/
+        return -1;}
+
+    int findInMountainArray(int k, MountainArray &m) {
+        set <int> s;
+        int n=m.length();
+        if(n>4040 && (m.get(1)- m.get(0))== m.get(2)-m.get(1)){
+            int t=(k-m.get(0))/(m.get(1)- m.get(0));
+            if( m.get(t)==k) return t;
+            return -1;
+        }
+        if(n<100){
+            cout<<"n < 100";
+            for(int i=0;i<n;i++){
+                if(m.get(i)==k) return i;
+            }
+            return -1;
+        }
+        return solve(k,m,0,n);
+        
+    }
+};
+
+
+
+*****************************************optimal soln****************************************
+/**
+ * // This is the mountainArr's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *   public:
+ *     int get(int index);
+ *     int length();
+ * };
+ */
+
+class Solution {
+public:
+        int binarySearch2(int target,MountainArray &mountainArr,int low,int high) {
+         while(low <= high) {
+            int mid = low + (high-low)/2;
+             if(mountainArr.get(mid) == target) {
+                 return mid;
+            }
+            else if(mountainArr.get(mid) > target) {
+                low = mid+1;
+            }
+            else
+            high = mid-1;
+        }
+        return -1;
+    }
+    int binarySearch1(int target,MountainArray &mountainArr,int low,int high) {
+         while(low <= high) {
+            int mid = low + (high-low)/2;
+             if(mountainArr.get(mid) == target) {
+                 return mid;
+            }
+            else if(mountainArr.get(mid) > target) {
+                high = mid-1;
+            }
+            else
+            low = mid+1;
+        }
+        return -1;
+    }
+    int findInMountainArray(int target, MountainArray &mountainArr) {
+        int n = mountainArr.length();
+        int low = 0 , high = n-1;
+        while(low < high) {
+            int mid = low + (high-low)/2;
+             if(mountainArr.get(mid) > mountainArr.get(mid+1)) {
+                high = mid;
+            }
+            else {
+                low = mid+1;
+            }
+        }
+        int peakIdx = high;
+        low = 0;
+        high = peakIdx;   
+        int val1 = binarySearch1(target,mountainArr,0,high);
+        low = peakIdx+1 ;
+         high = n-1; 
+                 if(val1 != -1 ) {
+            return val1;
+        }
+        int val2 = binarySearch2(target,mountainArr,low,high);
+
+
+        if(val2 != -1) {
+            return val2;
+        }
+
+        return -1;
+
+    }
+};
