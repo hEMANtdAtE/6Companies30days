@@ -1,0 +1,139 @@
+/**
+ ***************************************optimal soln****************************************************
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        
+        unordered_map<int,ListNode*> ump;
+        int currsum = 0;
+        // dummy node to return updated head as dummy ka next
+        ListNode*  dummy = new ListNode(0,head);
+        ump[0] = dummy;
+        // curent pointer    
+        ListNode* curr = head;
+
+        while(curr!=NULL){
+            currsum = currsum + curr->val;
+            if(ump.find(currsum)!=ump.end()){
+
+                ListNode* temp = ump[currsum]->next;
+                int SUM = currsum;
+                //  now untill temp is not equal to curr delete all the sums possible fromump
+                while(temp!=curr){
+                    SUM += temp->val;
+                    ump.erase(SUM);
+                    temp = temp->next;
+                }
+                ump[currsum]->next= curr->next;
+
+            }else{
+                ump[currsum] = curr;
+            }
+            curr = curr->next;
+        }
+
+        return dummy->next;
+
+    }
+};/**
+
+
+ ******************************************my soln****************************************************
+
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+ // C++ program to print all subarrays
+// in the array which has sum 0
+
+
+class Solution {
+public:
+    void insert(ListNode** root, int item){
+        ListNode* temp = new ListNode;
+        temp->val = item;
+        temp->next = *root;
+        *root = temp;
+    }
+    
+    void display(ListNode* root){
+        while (root != NULL) {
+            cout << root->val << " ";
+            root = root->next;
+        }
+    }
+    
+    ListNode *arrayToList(vector <int> arr, int n){
+        ListNode *root = NULL;
+        for (int i = n-1; i >= 0 ; i--)
+            insert(&root, arr[i]);
+        return root;
+    }
+  
+
+    vector<pair<int, int>> findSubArrays(vector <int> arr, int n){
+        unordered_map<int, vector<int> > map;
+
+        vector <pair<int, int>> out;
+        int sum = 0;
+        for (int i = 0; i < n; i++){
+            sum += arr[i];
+            if (sum == 0) out.push_back(make_pair(0, i));
+            if (map.find(sum) != map.end())
+            {
+                vector<int> vc = map[sum];
+                for (auto it = vc.begin(); it != vc.end(); it++)
+                    out.push_back(make_pair(*it + 1, i));
+            }
+            map[sum].push_back(i);
+        }
+        return out;
+    }
+
+
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        ListNode* temp= head;
+        vector <int> v;
+        while(temp!=NULL) {
+            v.push_back(temp->val);
+            temp=temp->next;
+        }
+        int n=v.size();
+        vector <int> dp(n,0);
+        vector< pair<int, int> > out = findSubArrays(v,n);
+        for(auto it = out.begin(); it != out.end(); it++){
+            if(dp[it->first]==0){
+                for(auto i = it->first; i<=it->second; i++){
+                    dp[i]=1;
+                }
+            }
+        }
+        // for(int i=0;i<n;i++){
+        //     cout<<v[i]<<" "<<dp[i]<<endl;
+        // }
+        vector <int> arr;
+        for(int i=0;i<n;i++){
+            if(dp[i]==0) arr.push_back(v[i]);
+        }
+        n=arr.size();
+        ListNode* ans = arrayToList(arr, n);
+        // temp=ans;
+        return ans;
+    }
+};
