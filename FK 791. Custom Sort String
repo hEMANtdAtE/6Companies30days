@@ -30,6 +30,11 @@ public:
 
 
 
+****************************easiest soln*******************************
+using a comparator;
+find index of a and b in order and return true or false;
+
+
 ********************************************optimal soln*********************************************
 class Solution {
 public:
