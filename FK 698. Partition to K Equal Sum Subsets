@@ -1,0 +1,75 @@
+************************************************my soln****************************************
+class Solution {
+public:
+    bool solve(int index, vector<int>& nums,vector<int>& vis,int sum, int csum, int k, int n){
+        if(k==1) return true;
+        if(index==n) return false;
+        if(csum==sum) return solve(0,nums,vis, sum,0,k-1,n);
+
+        // vis[index]=1;
+        for(int j = index ;j<n;j++){
+            if( vis[j]==0 && (csum+nums[j])<=sum  ){
+                vis[j]=1;
+                csum += nums[j];
+                if(solve(j+1,nums,vis,sum,csum,k,n))
+                    return true;
+
+                vis[j]=0;
+                csum -= nums[j];
+            }
+        }
+        return false;    
+    }
+
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        int n=nums.size();
+        vector <int> vis(n,0);
+        int sum=accumulate(nums.begin(), nums.end(), 0) ;
+        // cout<<sum%k<<endl;
+        if(sum % k){
+            return false;
+        }
+        sum=sum/k;
+        if(solve(0,nums,vis,sum,0,k,n)) return true;
+        return false;
+        
+    }
+};
+
+
+
+
+********************************************optimal soln****************************************
+ class Solution {
+    public:
+bool solve(vector<int> nums,vector<bool>& visited,int currsum,int idx,int subsetsum,int k){
+        if(k==0)return true;
+        if(currsum>subsetsum)return false;
+        if(currsum==subsetsum){
+            return solve(nums,visited,0,0,subsetsum,k-1);
+        }
+        for(int i=idx;i<nums.size();i++){
+            if(visited[i])continue;
+            visited[i] = true;
+            if(solve(nums,visited,currsum+nums[i],i+1,subsetsum,k))return true;
+            visited[i] = false;
+			//optimization 
+            if(currsum==0)break;
+        }
+        return false;
+    }
+    bool canPartitionKSubsets(vector<int>& nums, int k) {
+        int n = nums.size();
+        if(k > n)return false;
+        int sum=0;
+        for(auto n : nums)
+            sum += n;
+       if (nums.size() < k || sum % k) return false;
+        int subsetsum = sum/k;
+        vector<bool> v(n,false);
+		//sort array in decreasing order
+        sort(nums.begin(), nums.end(), greater<int>());
+        return solve(nums,v,0,0,subsetsum,k);
+    }
+};
+
