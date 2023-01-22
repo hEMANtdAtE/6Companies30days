@@ -1,0 +1,26 @@
+************************************************my/optimal soln**********************************
+class Solution {
+public:
+    bool b(int N, int k){
+        string s = "";
+
+        while (N != 0) {
+            int r=N%k;
+             s = to_string(r) + s;
+            N /= k;
+        }
+        if (s == "") {s = "0";}
+        string ss=s;
+        reverse(s.begin(), s.end());
+        // cout<<k<<" "<<s<<" "<<ss<<endl;
+        return (s!=ss);
+    }
+
+
+    bool isStrictlyPalindromic(int n) {
+        for(int i=2;i<n-1;i++){
+            if( b(n,i) ) return false;
+        }
+        return true;
+    }
+};
