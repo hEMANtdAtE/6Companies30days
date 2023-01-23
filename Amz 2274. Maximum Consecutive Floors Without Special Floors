@@ -1,0 +1,21 @@
+************************************************my/optimal soln*******************************************
+int _IO = []()
+{
+    std::ios::sync_with_stdio(0);
+    std::cin.tie(0); //cout.tie(0);
+    return 0;
+}();
+
+class Solution {
+public:
+    int maxConsecutive(int b, int t, vector<int>& s) {
+        sort(s.begin(), s.end());
+        int ans=0;
+        ans=max(ans, s[0]-b);
+        for(int i=1;i<s.size();i++){
+            ans=max(ans, s[i] - s[i-1] -1);
+        }
+        ans=max(ans, t-s[s.size()-1] );
+        return ans;
+    }
+};
