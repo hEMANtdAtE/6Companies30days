@@ -1,0 +1,83 @@
+*****************************************************my soln***********************************************
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+class Solution {
+public:
+    int totalFruit(vector<int>& f) {
+        int ans=0;
+        int n=f.size();
+        vector <int> v=f;
+        int uni=distance(v.begin(),std::unique(v.begin(), v.begin() + n));
+        if(uni < 3) {cout<<uni<<endl; return n;}
+        if(n==1) return 1;
+        if(n==2) return 2;
+        int fa=f[0];
+        int ii=1;
+        while(f[ii]==fa) ii++;
+        int fb=f[ii];
+        int local=ii+1;
+        int fbi=0;
+        if(ii==n) return n;
+        for(int i=ii+1;i<n ;i++){
+            if(f[i]==fa || f[i]==fb ) {
+                local++;
+                if(f[i]!=f[i-1]) fbi=i;
+            }
+            else{
+                ans=max(local, ans);
+                fa=f[i];
+                fb=f[i-1];
+                local=count(f.begin()+fbi, f.begin() + i, fb)+1;
+            }
+        }
+        ans=max(local, ans);
+        return ans;
+    }
+};
+
+
+
+***************************************************well written soln**********************************
+//same logic
+class Solution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        int fruit1 = -1, fruit2 = -1, output = 0;
+        int length = 0, start = 0;
+        for (int i = 0; i < fruits.size(); i++) {
+            if (fruit1 == -1) {
+                fruit1 = fruits[i];
+            }
+            else if (fruit2 == -1 && fruits[i] != fruit1) {
+                fruit2 = fruits[i];
+            }
+
+            if ( fruits[i] == fruit1 || fruits[i] == fruit2 ) {
+                length ++;
+                output = max (output, length);
+            }
+            else {
+                length = 0;
+                if (fruits[i - 1] == fruit1) {
+                    while (fruits[i - length - 1] == fruit1) {
+                        length ++;
+                    }
+                    fruit2 = fruits[i];
+                    length ++;
+                }
+                else if (fruits[i - 1] == fruit2) {
+                    while (fruits[i - length - 1] == fruit2) {
+                        length ++;
+                    }
+                    fruit1 = fruits[i];
+                    length ++;
+                }
+            }
+        }
+        return output;
+    }
+};
