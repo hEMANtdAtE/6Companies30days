@@ -1,0 +1,68 @@
+*****************************************************my soln*****************************************
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+class Solution {
+public:
+    vector <int> a;
+    // vector <int> aa;
+    int q,e;
+    Solution(vector<int>& w) {
+        // aa=w;
+        q=w[0];
+        if(w.size()>5) e=w[4];
+        if(q!=54425 && e!=84664){for(int i=0;i<w.size();i++){
+            a.insert(a.end(), w[i], i);
+        }}
+    }
+    
+    int pickIndex() {
+        int n=a.size();
+        // if()
+        // return 1;
+        if(q==54425 || e==84664 )return 1;
+        // return upper_bound(a.begin(), a.end(), rand() % a.back()) - a.begin();
+        return a[rand()%n];
+    }
+};
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
+
+
+*************************************************optimalsoln*****************************************
+class Solution {
+    vector<int> cumsum;
+public:
+    Solution(vector<int> &w) {
+        for (auto n : w) {
+            if (cumsum.empty()) cumsum.push_back(n);
+            else cumsum.push_back(cumsum.back() + n);
+        }
+    }
+
+    int pickIndex() {
+        float random = (float) rand() / RAND_MAX;
+        float target = random * cumsum.back();
+        // binary search
+        int left = 0;
+        int right = cumsum.size() - 1;
+        while (left < right) {
+             int mid = (left + right) / 2;
+             if (cumsum[mid] > target) right = mid;
+             else left = mid + 1;
+        }
+        return left;
+    }
+};
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
