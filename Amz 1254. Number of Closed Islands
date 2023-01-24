@@ -1,0 +1,62 @@
+****************************************my soln ******************************************************
+
+class Solution {
+public:
+
+    int closedIsland(vector<vector<int>>& grid) {
+        int n=grid.size();
+        int m=grid[0].size();
+        for (int i = 0; i < n; ++i)
+            for (int j = 0; j < m; ++j)
+                if (i * j == 0 || i == n - 1 || j == m - 1)
+                    if (grid[i][j] == 0)
+                        dfs(grid, i, j);
+        int t=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==0) 
+                {dfs(grid, i, j);
+                ++t;}
+            }
+        }
+        return t;
+    }
+
+    private:
+    void dfs(vector<vector<int>>& grid, int i, int j) {
+        if (i < 0 || i == grid.size() || j < 0 || j == grid[0].size())
+        return;
+        if (grid[i][j] == 1)
+        return;
+
+        grid[i][j] = 1;
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
+    };
+        
+};
+
+
+
+***********************************optimal soln**************************************
+class Solution {
+public:
+    int fill(vector<vector<int>>& g, int i, int j) {
+    if (i < 0 || j < 0 || i >= g.size() || j >= g[i].size() || g[i][j])
+        return 0;
+    return (g[i][j] = 1) + fill(g, i + 1, j) + fill(g, i, j + 1) 
+        + fill(g, i - 1, j) + fill(g, i, j - 1);
+}
+int closedIsland(vector<vector<int>>& g, int res = 0) {
+    for (int i = 0; i < g.size(); ++i)
+        for (int j = 0; j < g[i].size(); ++j)
+            if (i * j == 0 || i == g.size() - 1 || j == g[i].size() - 1)
+                fill(g, i, j);
+    for (int i = 0; i < g.size(); ++i)
+        for (int j = 0; j < g[i].size(); ++j)
+            res += fill(g, i, j) > 0;
+    return res;
+}
+};
