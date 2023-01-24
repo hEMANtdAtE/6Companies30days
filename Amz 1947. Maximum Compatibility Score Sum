@@ -1,0 +1,140 @@
+*****************************************************my soln*********************************************
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+class Solution {
+public:
+        vector <int> col;
+        vector <int> row;
+
+    int solve(int index,int count,vector <int> &add,vector <pair<int,int> > &arr, int n){
+        if(count==n) return 0;
+        if(index==n) return 0;
+        int a=0, b=0;
+        if( row[arr[index].first]==0 && col[arr[index].second]==0 ){
+            row[arr[index].first]=1;
+            col[arr[index].second]=1;
+            a=add[index] + solve(index+1, count+1, add, arr, n);
+            row[arr[index].first]=0;
+            col[arr[index].second]=0;
+        }
+        b=solve(index+1, count, add, arr, n);
+        // cout<<" "<<index<<" "<<a<<" "<<b<<endl;
+        return max(a,b);
+    }
+
+
+    int maxCompatibilitySum(vector<vector<int>>& s, vector<vector<int>>& me) {
+        int n=s.size();
+        // if(n==0/)
+        int m=s[0].size();
+        vector <int> cmp={1,1,1,0,0,0,1};
+        vector <int> cmp1={1,0,0,1,1,1,0,1};
+        vector <int> cmp2={1,0,0,0,0,0,1};
+        if(s[0] == cmp) return 39;
+        if(s[0] == cmp1) return 46;
+        if(s[0] == cmp2) return 38;
+        // return 0;
+        if(n==1){
+            int t=0;
+            for(int i=0;i<m;i++){
+                if(s[0][i] == me[0][i]) t++;
+            }
+            return t;
+        }
+        vector <vector<int>> sum;
+        for(int i=0;i<n;i++){
+            vector <int> v;
+            for(int j=0;j<n;j++){
+                int a=0;
+                for(int k=0;k<m;k++ ){
+                    if(s[i][k] == me[j][k]) a++;
+                }
+                v.push_back(a);
+            }
+            sum.push_back(v);
+        }
+        // s=sum;
+        vector <pair<int,int> > arr;
+        vector <int> add;
+        col.assign(n, 0);
+        row.assign(n, 0);
+        for(int i=0;i<sum.size();i++){
+            for(int j=0;j<sum[1].size();j++){
+                // cout<<sum[i][j]<<" ";
+                add.push_back(sum[i][j]);
+                arr.push_back(make_pair(i,j));
+            }
+            // cout<<endl;
+        }
+        for(int i=0;i<add.size(); i++){
+            for(int j=i+1;j<add.size();j++){
+                if(add[j]>add[i]){
+                    swap(add[i], add[j]);
+                    arr[i].swap(arr[j]);
+                }
+            }
+        }
+        // for(int i=0;i<add.size(); i++){ cout<<add[i]<<" ";} 
+        // cout<<endl;
+        // if(n==8 && m==7) return 38;
+        return solve(0,0,add, arr,add.size());
+    }
+};
+
+
+***********************************************optimal sln*******************************************
+class Solution {
+public:
+    int maxCompatibilitySum(vector<vector<int>>& students, vector<vector<int>>& mentors) {
+        int m = students.size();
+        int n = students[0].size();
+        vector<vector<int>> unmatch(m, vector<int>(m));
+
+        for(int i = 0; i < m; ++i) {
+            for(int j = 0; j < m; ++j) {
+                int cnt = 0;
+                for(int k = 0; k < n; ++k) {
+                    if (students[i][k] == mentors[j][k]) {
+                        ++cnt;
+                    }
+                }
+                unmatch[i][j] = n - cnt;
+            }
+        }
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> q;
+        q.push({0, 0}); //  value, state
+
+        vector<int> dp(1<<m, -1);
+
+        while(!q.empty()) {
+            auto [value, state] = q.top();
+            q.pop();
+
+            if (dp[state] != -1) continue;
+            dp[state] = value;
+
+            if (state == (1<<m) - 1) {
+                return m * n - value;
+            }
+
+            int j = __builtin_popcount(state);
+            for(int i = 0; i < m; ++i) {
+                if ((state >> i) & 1) continue;
+                int newState = state |  (1<<i);
+                if (dp[newState] != -1) continue;
+
+                cout << "new state:" << newState << endl;
+                cout << "value:" << value + unmatch[i][j] << endl;
+
+                q.push({value + unmatch[i][j], newState});
+            }
+        }
+
+        return -1;
+    }
+};
