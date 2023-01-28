@@ -1,0 +1,57 @@
+*****************************************************my soln***************************************************
+class Solution {
+public:
+    double x,y;
+    double t;
+    std::random_device rd;
+    std::mt19937 gen;
+    std::uniform_real_distribution<> dis;
+
+    Solution(double radius, double x_center, double y_center) {
+        t=radius;
+        x=x_center;
+        y=y_center;
+    }
+    
+     vector<double> randPoint() {
+        const double length = sqrt(distribution(generator)) * t;
+        const double degree = distribution(generator) * 2 * M_PI;
+        const double xx = x + length * cos(degree);
+        const double yy = y + length * sin(degree);
+        return {xx, yy};
+    }
+
+    private:
+    default_random_engine generator;
+    uniform_real_distribution<double> distribution =uniform_real_distribution<double>(0.0, 1.0);
+};
+
+
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(radius, x_center, y_center);
+ * vector<double> param_1 = obj->randPoint();
+ */
+
+**************************************************optimal soln***************************************************
+// https://leetcode.com/amyasnikov/
+class Solution {
+public:
+    double r, x, y;
+
+    Solution(double radius, double x_center, double y_center) {
+        r = radius;
+        x = x_center;
+        y = y_center;
+    }
+    
+    vector<double> randPoint() {
+        static auto re = mt19937_64(random_device()());
+        static auto unif = uniform_real_distribution<double>(0, 1);
+
+        double angle = unif(re) * 2 * M_PI;
+        double dist = sqrt(unif(re)) * r;
+        return {x + dist * cos(angle), y + dist * sin(angle)};
+    }
+};
