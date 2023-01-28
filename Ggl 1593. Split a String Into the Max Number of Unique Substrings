@@ -1,0 +1,32 @@
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+
+class Solution {
+public:
+    int m=1;
+    void solve(string s, int b, unordered_set<string> &ss, int n, int d){
+        if(b==n){
+            m=max(d,m);
+            return;
+        }
+        string t;
+        for(int i=b;i<n;i++){
+            t.push_back(s[i]);
+            if(ss.find(t)!=ss.end()) continue;
+            ss.insert(t);
+            solve(s,i+1,ss,n,1+d);
+            ss.erase(t);
+        }
+    }
+
+    int maxUniqueSplit(string s) {
+        unordered_set<string> ss;
+        int n=s.size();
+        solve(s,0,ss,n,0);
+        return m;
+    }
+};
