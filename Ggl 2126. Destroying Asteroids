@@ -1,0 +1,25 @@
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+
+class Solution {
+public:
+    bool asteroidsDestroyed(int m, vector<int>& a) {
+        // int mm = 99999999999;
+        sort(a.begin(), a.end());
+        int i=0;
+        long long mm=m;
+        if(a[0]>m) {return false; cout<<1;}
+        // a[0]+=m;
+        mm+=a[0];
+        for(int i=1;i<a.size();i++){
+            if(a[i] > mm) { return false; }
+            mm=a[i]+mm;
+            // a[i]=a[i]%mm;
+        }
+        return true;
+    }
+};
