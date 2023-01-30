@@ -1,0 +1,68 @@
+*****************************************************my soln*******************************************************
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+        int size = flights.size();
+
+        // sanity check
+        if (!size)
+                return -1;
+
+        vector<int> dist(n, INT_MAX);
+        dist[src] = 0;
+        for (int i=0; i<K+1; i++) {
+                vector<int> temp(dist);
+                for (auto f : flights) {
+                        if (dist[f[0]] == INT_MAX) continue;
+                        temp[f[1]] = min(temp[f[1]], dist[f[0]]+f[2]);
+                }
+                swap(temp, dist);
+        }
+
+        return dist[dst] == INT_MAX ? -1 : dist[dst];
+    }
+};
+
+
+
+*************************************************************optimal********************************************************
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        vector<vector<int>> cost(n, vector<int>(n, INT_MAX));
+        vector<int> graph[n];
+        for(auto a: flights){
+            graph[a[0]].push_back(a[1]);
+            cost[a[0]][a[1]] = a[2];
+        }
+        vector<int> dp(n, INT_MAX);
+        queue<pair<int, int>> q1, q2;
+        q1.push({src, 0});
+        while(!q1.empty()){
+            if(k < 0){
+                break;
+            }
+            auto temp = q1.front();
+            q1.pop();
+            for(auto child: graph[temp.first]){
+                int c1 = cost[temp.first][child] + temp.second;
+                if(c1 < dp[child]){
+                    dp[child] = c1;
+                    q2.push({child, c1});
+                }
+            }
+            if(q1.empty()){
+                swap(q1, q2);
+                k--;
+            }
+        }
+        return dp[dst] == INT_MAX? -1: dp[dst];
+    }
+};
