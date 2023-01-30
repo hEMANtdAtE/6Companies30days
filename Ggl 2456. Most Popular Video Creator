@@ -1,0 +1,77 @@
+*********************************************my soln***********************************************
+
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+class Solution 
+{
+public:
+    vector<vector<string>> mostPopularCreator(vector<string>& crt, vector<string>& ids, vector<int>& vws) 
+    {
+        unordered_map<string,long> tot;
+        unordered_map<string,vector<pair<long,string>>> vid;
+        
+        long m = 0;
+        for (int i = 0; i < crt.size(); ++i)
+        {
+            tot[crt[i]] += vws[i]; 
+            m = max(m, tot[crt[i]]);
+            vid[crt[i]].emplace_back(-vws[i], ids[i]);
+        }
+        
+        vector<vector<string>> result;
+        for (auto&[c,vv] : vid)
+        {
+            if (tot[c] != m) continue;
+            result.push_back({c, min_element(vv.begin(),vv.end())->second});
+        }
+        
+        return result;
+    }
+};
+
+
+
+
+*********************************************optimal***********************************************
+class Solution {
+public:
+struct v{
+       long sum =0;
+       string id;
+       long max_view=0;  
+};
+    vector<vector<string>> mostPopularCreator(vector<string>& creators, vector<string>& ids, vector<int>& views) {
+         unordered_map<string,v> mp;
+         long count =0;
+               for(int i=0;i<views.size();i++){
+                
+                if(!mp.count(creators[i])){
+                   mp[creators[i]]={views[i],ids[i],views[i]};
+                    count = max(count, mp[creators[i]].sum);
+                        continue;
+
+                }
+             v &u    = mp[creators[i]];
+             u.sum+=views[i];
+             if(u.max_view<views[i] || u.max_view==views[i]  && u.id>ids[i] ){
+                   u.max_view = views[i];
+                   u.id= ids[i];
+             }
+     count = max(count, mp[creators[i]].sum);
+
+               }
+         vector<vector<string>> ans;
+    for (auto &r: mp)
+        if (r.second.sum == count)
+            ans.push_back({ r.first, r.second.id });
+
+    return ans;
+        
+        
+        
+    }
+};
