@@ -1,0 +1,94 @@
+*********************************************my soln***********************************************
+const int ZERO = [](){
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	return 0;
+}();
+
+
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        string a="Radiant";
+        string b="Dire";
+        int r=count(senate.begin(), senate.end(), 'R');
+        int d=count(senate.begin(), senate.end(), 'D');
+        int i=0;
+        vector <int> v(senate.size(),0);
+        while(true){
+            if(r==0) return b;
+            if(d==0) return a;
+            if(i==senate.size()) i=0;
+            if(senate[i]=='D' && v[i]==0) { 
+                r--; 
+                int temp=i;
+                while(true){
+                    temp++;
+                    if(temp==senate.size()) temp=0;
+                    if(v[temp]==1) continue;
+                    if(senate[temp]=='R') break;
+                }
+                cout<<i<<" "<<temp<<" "<<v[temp]<<endl; 
+                v[temp]=1; 
+            }
+            if(senate[i]=='R' && v[i]==0) { 
+                d--; 
+                int temp=i;
+                while(true){
+                    temp++;
+                    if(temp==senate.size()) temp=0;
+                    if(v[temp]==1) continue;
+                    if(senate[temp]=='D') break;
+                }
+                cout<<i<<" "<<temp<<" "<<v[temp]<<endl; 
+                v[temp]=1; 
+                // di=di++%(da);
+            }
+            // if(senate[i]=='R') d--;
+            i++;
+        }
+        return a;
+    }
+};
+
+
+
+*********************************************optimal***********************************************
+
+class Solution {
+public:
+    string predictPartyVictory(string senate) {
+        int r = 0, d = 0, banR = 0, banD = 0;
+        queue<char> q;
+        for(auto i:senate) {
+            q.push(i);
+            if(i=='R')r++;
+            else d++;
+        }
+
+        while(!q.empty()) {
+            if(d == 0) return "Radiant";
+            else if (r == 0) return "Dire";
+            auto i = q.front();q.pop();
+            if(i=='R') {
+                if(banR) {
+                    banR--;
+                    r--;
+                    continue;
+                }
+                banD++;
+                q.push('R');
+            } else {
+                if(banD) {
+                    banD--;
+                    d--;
+                    continue;
+                }
+                banR++;
+                q.push('D');
+            }
+        }
+        if(d ==0) return "Radiant";
+        return "Dire";
+    }
+};
